@@ -16,10 +16,12 @@
 package dev.sarasu.jdk8.nio.file;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,18 +40,19 @@ public class FileSystemTest {
 	}
 
 	@Test
-	public void getPathByStringTest() {
+	public void getPathByStringTest() throws URISyntaxException {
 		String filePath;
 		Path path;
 
 		given: {
-			filePath = "/resources/file_system/filesystem.txt";
+			filePath = Paths.get(getClass().getResource(".").toURI().getPath()) + "/../../../../../file_system/filesystem.txt";
 		}
 		when: {
 			path = filesSystem.getPathByString(filePath);
 		}
 		then: {
 			assertEquals("filesystem.txt", path.getFileName().toString());
+			assertTrue(path.toFile().canRead());
 		}
 	}
 
@@ -60,14 +63,15 @@ public class FileSystemTest {
 		Path path;
 
 		given: {
-			filePath = "file:/resources/file_system/filesystem.txt";
-			uri = new URI(filePath);
+			filePath = "/file_system/filesystem.txt";
+			uri = this.getClass().getResource(filePath).toURI();
 		}
 		when: {
 			path = filesSystem.getPathByURI(uri);
 		}
 		then: {
 			assertEquals("filesystem.txt", path.getFileName().toString());
+			assertTrue(path.toFile().canRead());
 		}
 	}
 }
