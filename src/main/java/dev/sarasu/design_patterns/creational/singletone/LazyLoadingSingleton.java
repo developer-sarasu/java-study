@@ -13,37 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.sarasu.design_patterns.singleton;
-
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
-import dev.sarasu.design_patterns.singletone.LazyLoadingSingleton;
+package dev.sarasu.design_patterns.creational.singletone;
 
 /**
  *
  * @author sarasu
  * @since 
  */
-public class LazyLoadingSingletonTest {
-	@Test
-	public void singletonTest() {
-		LazyLoadingSingleton singleton1;
-		LazyLoadingSingleton singleton2;
+public class LazyLoadingSingleton {
+	private static LazyLoadingSingleton instance;
 
-		given: {
+	private LazyLoadingSingleton() {
 
+	}
+
+	public static LazyLoadingSingleton getInstance() {
+		if (instance == null) {
+			synchronized (LazyLoadingSingleton.class) {
+				if (instance == null) {
+					instance = new LazyLoadingSingleton();
+				}
+
+			}
 		}
 
-		when: {
-			singleton1 = LazyLoadingSingleton.getInstance();
-			singleton2 = LazyLoadingSingleton.getInstance();
-		}
-
-		then: {
-			assertTrue(singleton1 == singleton2);
-			assertTrue(singleton1.equals(singleton2));
-		}
+		return instance;
 	}
 }
